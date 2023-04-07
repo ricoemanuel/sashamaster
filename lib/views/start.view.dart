@@ -18,6 +18,7 @@ class _StartPage extends State<StartPage> {
   // ignore: non_constant_identifier_names
   Future InitializeUser() async {
     data = await CurrentUser();
+    
   }
 
   @override
@@ -33,7 +34,7 @@ class _StartPage extends State<StartPage> {
       endDrawerEnableOpenDragGesture: false,
       appBar: AppBar(
         title: const Text('Universidad de Medellín'),
-        // Agrega un icono de menú hamburguesa en la barra de navegación
+        
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
@@ -47,7 +48,7 @@ class _StartPage extends State<StartPage> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Colors.blue,
+                color: Colors.red,
               ),
               child: FutureBuilder<Map<String, dynamic>>(
                 future: CurrentUser(),
@@ -65,7 +66,8 @@ class _StartPage extends State<StartPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            data["name"],
+                            data["name"][0].toUpperCase() + data["name"].substring(1)+" "+
+                            data["lastname"].split(" ")[0][0].toUpperCase()+data["lastname"].split(" ")[0].substring(1),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -99,10 +101,7 @@ class _StartPage extends State<StartPage> {
             ),
           ],
         ),
-      ),
-      body: const Center(
-        child: Text('Contenido de mi pantalla'),
-      ),
+      )
     );
   }
 }
