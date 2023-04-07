@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sashamaster/controllers/firebase.controller.dart';
+import 'start.view.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,16 +19,58 @@ class _LoginPageState extends State<LoginPage> {
   Future<dynamic> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       var user = await SignIn(_email, _password);
-      print(user);
+      if (user == 1) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Usted no tiene cuenta'),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: const Text('Aceptar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else if (user == 2) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Contraseña incorrecta'),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: const Text('Aceptar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        // ignore: unrelated_type_equality_checks
+      } else if (user.runtimeType == String) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const StartPage()),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio de sesión'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

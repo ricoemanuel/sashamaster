@@ -14,9 +14,9 @@ Future<dynamic> CreateUser(emailAddress, password) async {
     return uid;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
-      return 'weak';
+      return 1;
     } else if (e.code == 'email-already-in-use') {
-      return 'used';
+      return 2;
     }
   }
 }
@@ -30,9 +30,9 @@ Future<dynamic> SignIn(emailAddress, password) async {
     return uid;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
-      return 'nonUser';
+      return 1;
     } else if (e.code == 'wrong-password') {
-      return 'wrongpass';
+      return 2;
     }
   }
 }
@@ -40,15 +40,32 @@ Future<dynamic> SignIn(emailAddress, password) async {
 // ignore: non_constant_identifier_names
 Future<dynamic> LogOut() async {
   await FirebaseAuth.instance.signOut();
-  return 'signedout';
+  return 1;
 }
 
 // ignore: non_constant_identifier_names
 Future<dynamic> CreateUserFirestore(data) async {
   final user = await CreateUser(data["email"], data["password"]);
-  if (user == "weak" || user == "used") {
+  if (user == 1 || user == 2) {
     return user;
-  } else if (user.lenght > 5) {
-    db.collection("users").add(data);
+    // ignore: unrelated_type_equality_checks
+  } else if (user.runtimeType == "String") {
+    data.remove("password");
+    data.remove("email");
+    await db.collection("users").doc(user).set(data);
+    return user;
   }
+}
+
+// ignore: non_constant_identifier_names
+Future<dynamic> GetUser(uid) async {
+  var user = db.collection("users").doc(uid).get();
+  return user;
+}
+
+// ignore: non_constant_identifier_names
+Future<Map<String, dynamic>> CurrentUser() async {
+  final user = FirebaseAuth.instance.currentUser;
+  var data = await GetUser(user?.uid);
+  return data.data();
 }
