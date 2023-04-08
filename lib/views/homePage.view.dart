@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/views/registrationForm.view.dart';
 
 class InicioPage extends StatelessWidget {
   const InicioPage({Key? key}) : super(key: key);
@@ -54,7 +55,11 @@ class InicioPage extends StatelessWidget {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navegar a la pantalla de registro
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegistrationForm()),
+                          );
                         },
                         style: ButtonStyle(
                           backgroundColor:
