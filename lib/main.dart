@@ -1,16 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sashamaster/controllers/firebase.controller.dart';
+import 'package:sashamaster/views/homePage.view.dart';
 import 'package:sashamaster/views/signin.view.dart';
 import 'package:sashamaster/views/start.view.dart';
 import 'firebase_options.dart';
 
+/*
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -43,6 +45,21 @@ class MyApp extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+*/
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: InicioPage(),
     );
   }
 }
