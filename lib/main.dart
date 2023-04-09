@@ -1,12 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sashamaster/controllers/firebase.controller.dart';
-import 'package:sashamaster/views/homePage.view.dart';
 import 'package:sashamaster/views/signin.view.dart';
 import 'package:sashamaster/views/start.view.dart';
 import 'firebase_options.dart';
 
-/*
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -27,6 +26,8 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           final currentUser = snapshot.data;
           return MaterialApp(
+            debugShowCheckedModeBanner:
+          false,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
             ),
@@ -48,7 +49,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-*/
+
+/*
 void main() {
   runApp(const MyApp());
 }
@@ -59,7 +61,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner:
+          false,
       home: InicioPage(),
     );
   }
 }
+*/

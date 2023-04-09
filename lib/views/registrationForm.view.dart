@@ -1,6 +1,11 @@
 // ignore_for_file: unused_field, sort_child_properties_last
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../controllers/firebase.controller.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -17,9 +22,45 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String? _firstName;
   String? _lastName;
   String? _email;
+  String? _password;
   String? _cedula;
   String? _carrera;
-  String? _foto;
+  File? _foto;
+  Future<void> _seleccionarFoto() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _foto = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _enviarFormulario() async {
+    if (_foto != null) {
+      final id = _cedula;
+      final email = _email;
+      final password = _password;
+      final firstName = _firstName;
+      final lastName = _lastName;
+      final carrera = _carrera;
+      const cargo = "estudiante";
+      final fotoUrl = await uploadFile(_foto!);
+      print(fotoUrl);
+      final userData = {
+        'cedula': id,
+        'email': email,
+        'password': password,
+        'firstName': firstName,
+        'lastName': lastName,
+        'carrera': carrera,
+        'fotoUrl': fotoUrl,
+        'charge': cargo
+      };
+      
+      CreateUserFirestore(userData);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +112,22 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     _email = value;
                   },
                 ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Contraseña'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese su contraseña';
+                    }
+                    if (value.length < 6) {
+                      return 'La contraseña debe tener al menos 6 caracteres';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _password = value;
+                  },
+                ),
                 const SizedBox(height: 16.0),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Nombre'),
@@ -111,29 +168,22 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Link de la foto'),
-                  keyboardType: TextInputType.url,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese un enlace';
-                    }
-                    if (!Uri.parse(value).isAbsolute) {
-                      return 'Por favor ingrese un enlace válido';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _foto = value;
-                  },
+                TextButton(
+                  onPressed: _seleccionarFoto,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.photo),
+                      const SizedBox(width: 8.0),
+                      Text(_foto?.path ?? 'Seleccionar foto de perfil'),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      // Guardar la información ingresada
+                      _enviarFormulario();
                     }
                   },
                   child: const Text('Registrar'),

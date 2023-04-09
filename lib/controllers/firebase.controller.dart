@@ -1,7 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+import 'dart:io';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
+final storageRef = FirebaseStorage.instance.ref();
+
 // ignore: non_constant_identifier_names
 Future<dynamic> CreateUser(emailAddress, password) async {
   try {
@@ -69,3 +74,18 @@ Future<Map<String, dynamic>> CurrentUser() async {
   var data = await GetUser(user?.uid);
   return data.data();
 }
+
+Future<String> uploadFile(File file) async {
+  try {
+    
+    final fileName = basename(file.path);
+    final destination = 'images/$fileName';
+    final ref = storageRef.child(destination);
+    await ref.putFile(file);
+    final url = await ref.getDownloadURL();
+    return url;
+  } catch (e) {
+    return e.toString();
+  }
+}
+
