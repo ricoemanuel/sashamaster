@@ -1,10 +1,9 @@
 // ignore_for_file: unused_field, sort_child_properties_last
 
 import 'dart:io';
-
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../controllers/firebase.controller.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -207,7 +206,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     children: [
                       const Icon(Icons.photo),
                       const SizedBox(width: 8.0),
-                      Text(_foto?.path ?? 'Seleccionar foto de perfil'),
+                      Text(path.basename(_foto?.path ?? 'Seleccionar foto de perfil') ),
                     ],
                   ),
                 ),
