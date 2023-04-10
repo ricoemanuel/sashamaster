@@ -23,6 +23,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String? _lastName;
   String? _email;
   String? _password;
+  String? _confirmpasword;
   String? _cedula;
   String? _carrera;
   File? _foto;
@@ -37,28 +38,44 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   Future<void> _enviarFormulario() async {
-    if (_foto != null) {
-      final id = _cedula;
-      final email = _email;
-      final password = _password;
-      final firstName = _firstName;
-      final lastName = _lastName;
-      final carrera = _carrera;
-      const cargo = "estudiante";
-      final fotoUrl = await uploadFile(_foto!);
-      print(fotoUrl);
-      final userData = {
-        'cedula': id,
-        'email': email,
-        'password': password,
-        'firstName': firstName,
-        'lastName': lastName,
-        'carrera': carrera,
-        'fotoUrl': fotoUrl,
-        'charge': cargo
-      };
-      
-      CreateUserFirestore(userData);
+    if (_password != _confirmpasword) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Las contraseñas no coinciden'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Aceptar'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (_foto != null) {
+        final id = _cedula;
+        final email = _email;
+        final password = _password;
+        final firstName = _firstName;
+        final lastName = _lastName;
+        final carrera = _carrera;
+        const cargo = "estudiante";
+        final fotoUrl = await uploadFile(_foto!);
+        print(fotoUrl);
+        final userData = {
+          'cedula': id,
+          'email': email,
+          'password': password,
+          'firstName': firstName,
+          'lastName': lastName,
+          'carrera': carrera,
+          'fotoUrl': fotoUrl,
+          'charge': cargo
+        };
+
+        CreateUserFirestore(userData);
+      }
     }
   }
 
@@ -126,6 +143,22 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   },
                   onSaved: (value) {
                     _password = value;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: 'confirma la contraseña'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese la confirmación de contraseña';
+                    }
+
+                    // Agregue cualquier otra validación que desee, como verificar si la contraseña tiene caracteres especiales, números, etc.
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _confirmpasword = value;
                   },
                 ),
                 const SizedBox(height: 16.0),
