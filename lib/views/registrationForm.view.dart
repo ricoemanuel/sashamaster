@@ -96,9 +96,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Cédula',
-                    contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -113,7 +115,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Correo'),
+                  decoration: InputDecoration(
+                    labelText: 'Correo',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -128,8 +135,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     _email = value;
                   },
                 ),
+                const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Contraseña'),
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -144,9 +157,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     _password = value;
                   },
                 ),
+                const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'confirma la contraseña'),
+                  decoration: InputDecoration(
+                    labelText: 'confirma la contraseña',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -162,7 +180,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Nombre'),
+                  decoration: InputDecoration(
+                      labelText: 'Nombre',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese su nombre';
@@ -175,7 +197,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Apellidos'),
+                  decoration: InputDecoration(
+                      labelText: 'Apellidos',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese sus apellidos';
@@ -188,7 +214,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Carrera'),
+                  decoration: InputDecoration(
+                      labelText: 'Carrera',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese su carrera';
@@ -206,7 +236,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     children: [
                       const Icon(Icons.photo),
                       const SizedBox(width: 8.0),
-                      Text(path.basename(_foto?.path ?? 'Seleccionar foto de perfil') ),
+                      Text(path.basename(
+                          _foto?.path ?? 'Seleccionar foto de perfil')),
                     ],
                   ),
                 ),
@@ -224,6 +255,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 16.0, horizontal: 6),
                     textStyle: const TextStyle(fontSize: 20.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                 ),
               ],
