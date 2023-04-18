@@ -63,17 +63,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
         final fotoUrl = await uploadFile(_foto!);
         print(fotoUrl);
         final userData = {
-          'cedula': id,
+          'id': id,
           'email': email,
           'password': password,
           'firstName': firstName,
           'lastName': lastName,
-          'carrera': carrera,
-          'fotoUrl': fotoUrl,
+          'career': carrera,
+          'photo': fotoUrl,
           'charge': cargo
         };
 
-        CreateUserFirestore(userData);
+        print(CreateUserFirestore(userData));
       }
     }
   }

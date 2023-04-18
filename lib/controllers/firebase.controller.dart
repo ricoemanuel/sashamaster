@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'dart:io';
+import 'dart:core';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
@@ -54,11 +55,10 @@ Future<dynamic> CreateUserFirestore(data) async {
   if (user == 1 || user == 2) {
     return user;
     // ignore: unrelated_type_equality_checks
-  } else if (user.runtimeType == "String") {
+  } else {
     data.remove("password");
     data.remove("email");
-    await db.collection("users").doc(user).set(data);
-    return user;
+    return await db.collection("users").doc(user).set(data);
   }
 }
 
@@ -77,9 +77,10 @@ Future<Map<String, dynamic>> CurrentUser() async {
 
 Future<String> uploadFile(File file) async {
   try {
-    
     final fileName = basename(file.path);
-    final destination = 'images/$fileName';
+    DateTime now = DateTime.now();
+    var time = DateTime(now.year, now.month, now.day, now.second,now.microsecond).toString();
+    final destination = 'images/$fileName-$time';
     final ref = storageRef.child(destination);
     await ref.putFile(file);
     final url = await ref.getDownloadURL();
@@ -88,4 +89,3 @@ Future<String> uploadFile(File file) async {
     return e.toString();
   }
 }
-
