@@ -46,7 +46,7 @@ Future<dynamic> SignIn(emailAddress, password) async {
 // ignore: non_constant_identifier_names
 Future<dynamic> LogOut() async {
   await FirebaseAuth.instance.signOut();
-  return 1;
+  return true;
 }
 
 // ignore: non_constant_identifier_names
@@ -65,6 +65,11 @@ Future<dynamic> CreateUserFirestore(data) async {
 // ignore: non_constant_identifier_names
 Future<dynamic> GetUser(uid) async {
   var user = db.collection("users").doc(uid).get();
+  return user;
+}
+// ignore: non_constant_identifier_names
+Future<dynamic> GetNotAcceptedUser() async {
+  var user = db.collection("users").where("state",isEqualTo:"1").get();
   return user;
 }
 

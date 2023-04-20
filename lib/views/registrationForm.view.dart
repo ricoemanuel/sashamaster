@@ -61,19 +61,20 @@ class _RegistrationFormState extends State<RegistrationForm> {
         final carrera = _carrera;
         const cargo = "estudiante";
         final fotoUrl = await uploadFile(_foto!);
-        print(fotoUrl);
         final userData = {
           'id': id,
           'email': email,
           'password': password,
-          'firstName': firstName,
-          'lastName': lastName,
-          'career': carrera,
+          'name': firstName,
+          'lastname': lastName,
+          'carreer': carrera,
           'photo': fotoUrl,
-          'charge': cargo
+          'charge': cargo,
+          'term': 1,
+          'state': "1"
         };
 
-        print(CreateUserFirestore(userData));
+        CreateUserFirestore(userData);
       }
     }
   }
