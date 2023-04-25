@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../controllers/firebase.controller.dart';
 
+// ignore: camel_case_types
 class home extends StatelessWidget {
   const home({Key? key}) : super(key: key);
 
@@ -35,17 +36,17 @@ class home extends StatelessWidget {
                               backgroundImage: NetworkImage(data[index]['photo']),
                               radius: 30,
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   data[index]['name'],
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                                 Text(
                                   data[index]['carreer'],
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                               ],
                             ),

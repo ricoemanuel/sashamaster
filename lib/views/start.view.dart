@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:sashamaster/controllers/firebase.controller.dart';
 import 'package:sashamaster/main.dart';
-import 'package:sashamaster/views/signin.view.dart';
-import 'package:sashamaster/views/home.view.dart';
+import 'package:sashamaster/views/NotAcceptedStudents.view.dart';
+import 'package:sashamaster/views/terms.view.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -17,8 +17,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
-  int selectedPage = 0;
-  final List<Widget> _pages = [const home()];
+  final List<Widget> _pages = [const home(), const term()];
+  late int selectedPage;
   @override
   void initState() {
     super.initState();
@@ -33,6 +33,12 @@ class _StartPage extends State<StartPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             final data = snapshot.data!;
+
+            if (data["charge"] == "estudiante") {
+              selectedPage = 1;
+            } else if (data["charge"] == "admin") {
+              selectedPage = 0;
+            }
 
             return Scaffold(
               body: _pages[selectedPage],
@@ -99,15 +105,6 @@ class _StartPage extends State<StartPage> {
                             title: const Text('Estudiantes'),
                             onTap: () {
                               // Agrega aquí la lógica para navegar a la pantalla de inicio
-                            },
-                          )
-                        : Container(),
-                    snapshot.hasData && data["charge"] == "estudiante"
-                        ? ListTile(
-                            leading: const Icon(Icons.book),
-                            title: const Text('Semestres'),
-                            onTap: () {
-                              // Agrega aquí la lógica para navegar a la pantalla de configuración
                             },
                           )
                         : Container(),
