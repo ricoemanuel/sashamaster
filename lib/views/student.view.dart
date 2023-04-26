@@ -9,38 +9,60 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Center(
-      child: CircleAvatar(
-        backgroundImage: NetworkImage(data[index]['photo']),
-        radius: 30,
-      ),
-    ),
-    const SizedBox(height: 8),
-    Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          data[index]['name'],
-          style: const TextStyle(fontSize: 16),
+        const SizedBox(height: 20),
+        Center(
+          child: Container(
+            height: 380,
+            width: 380,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(data[index]['photo']),
+                fit: BoxFit.cover,
+              ),
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
         ),
-        Text(
-          data[index]['carreer'],
-          style: const TextStyle(fontSize: 12),
+        const SizedBox(height: 20),
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '${data[index]['name']}',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${data[index]['carreer']}',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Center(
+          child: data[index]['state'] == "1"
+              ? ElevatedButton(
+                  onPressed: () {
+                    // Lógica del botón "Aceptar"
+                  },
+                  child: Text('Aceptar', style: const TextStyle(fontSize: 18)),
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                  ),
+                )
+              : const SizedBox(),
         ),
       ],
-    ),
-    const SizedBox(height: 8),
-    data[index]['state'] == "1"
-        ? ElevatedButton(
-            onPressed: () {
-              // Lógica del botón "Aceptar"
-            },
-            child: Text('Aceptar'),
-          )
-        : SizedBox(),
-  ],
-);
-}
+    );
+  }
 }

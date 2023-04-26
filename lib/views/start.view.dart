@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sashamaster/controllers/firebase.controller.dart';
 import 'package:sashamaster/main.dart';
 import 'package:sashamaster/views/NotAcceptedStudents.view.dart';
+import 'package:sashamaster/views/student.view.dart';
 import 'package:sashamaster/views/terms.view.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
