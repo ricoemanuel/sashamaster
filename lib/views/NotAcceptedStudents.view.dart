@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/views/student.view.dart';
 
 import '../controllers/firebase.controller.dart';
 
@@ -27,30 +28,45 @@ class home extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(data[index]['photo']),
-                              radius: 30,
-                            ),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  data[index]['name'],
-                                  style: const TextStyle(fontSize: 16),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                                appBar: AppBar(
+                                  title: Text(data[index]['name']),
                                 ),
-                                Text(
-                                  data[index]['carreer'],
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ],
+                                body: CardWidget(data: data, index: index)),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(data[index]['photo']),
+                                radius: 30,
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    data[index]['name'],
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    data[index]['carreer'],
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

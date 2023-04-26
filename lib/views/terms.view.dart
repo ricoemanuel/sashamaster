@@ -13,74 +13,75 @@ class term extends StatefulWidget {
 // ignore: camel_case_types
 class _termState extends State<term> {
   // Definir una variable para el índice del semestre seleccionado
-int selectedSemesterIndex = -1;
+  int selectedSemesterIndex = -1;
 
-@override
-Widget build(BuildContext context) {
-  return FutureBuilder<dynamic>(
-    future: CurrentUser(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        final data = snapshot.data!;
-        final terms = data["term"];
-        final List<Widget> items = List.generate(
-          terms,
-          (index) => GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedSemesterIndex = index;
-              });
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1.0,
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<dynamic>(
+      future: CurrentUser(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          final terms = data["term"];
+          final List<Widget> items = List.generate(
+            terms,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedSemesterIndex = index;
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text(
+                            'Contenido del Semestre ${selectedSemesterIndex + 1}'),
+                      ),
+                      body: Center(
+                        child: Text(
+                            'Contenido del Semestre ${selectedSemesterIndex + 1}'),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.0,
+                  ),
                 ),
-              ),
-              margin: EdgeInsets.only(top: 16.0),
-              child: SizedBox(
-                width: 300,
-                height: 100,
-                child: ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  title: Text(
-                    'Semestre ${index + 1}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
+                margin: const EdgeInsets.only(top: 16.0),
+                child: SizedBox(
+                  width: 300,
+                  height: 100,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    title: Text(
+                      'Semestre ${index + 1}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-
-        
-        if (selectedSemesterIndex != -1) {
-          return Scaffold(
-            body: Center(
-              child: Text(
-                'Contenido del Semestre ${selectedSemesterIndex + 1}',
-                style: const TextStyle(fontSize: 24),
-              ),
-            ),
           );
-        } else {
           return ListView(
             children: items,
           );
+        } else if (snapshot.hasError) {
+          return const Text('Error al obtener los datos');
+        } else {
+          return const CircularProgressIndicator();
         }
-      } else if (snapshot.hasError) {
-        return const Text('Error al obtener los datos');
-      } else {
-        return const CircularProgressIndicator();
-      }
-    },
-  );
-
+      },
+    );
   }
 }
