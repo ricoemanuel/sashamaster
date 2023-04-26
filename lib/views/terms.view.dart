@@ -3,59 +3,84 @@ import 'package:flutter/material.dart';
 import '../controllers/firebase.controller.dart';
 
 // ignore: camel_case_types
-class term extends StatelessWidget {
+class term extends StatefulWidget {
   const term({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-      future: CurrentUser(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          final terms = data["term"];
-          final List<Widget> items = List.generate(
-            terms,
-            (index) => Material(
-              elevation: 4,
+  State<term> createState() => _termState();
+}
+
+// ignore: camel_case_types
+class _termState extends State<term> {
+  // Definir una variable para el índice del semestre seleccionado
+int selectedSemesterIndex = -1;
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<dynamic>(
+    future: CurrentUser(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        final data = snapshot.data!;
+        final terms = data["term"];
+        final List<Widget> items = List.generate(
+          terms,
+          (index) => GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedSemesterIndex = index;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+              margin: EdgeInsets.only(top: 16.0),
               child: SizedBox(
-  width: 300,
-  height: 100,
-  child: ListTile(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    title: Text(
-      'Semestre ${index + 1}',
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 24, // Desired font size
-      ),
-    ),
-    shape: const Border(
-      bottom: BorderSide(
-        color: Colors.grey, // Desired border color
-        width: 5, // Desired border width
-      ),
-    ),
-  ),
-),
-              
+                width: 300,
+                height: 100,
+                child: ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  title: Text(
+                    'Semestre ${index + 1}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        
+        if (selectedSemesterIndex != -1) {
+          return Scaffold(
+            body: Center(
+              child: Text(
+                'Contenido del Semestre ${selectedSemesterIndex + 1}',
+                style: const TextStyle(fontSize: 24),
+              ),
             ),
           );
-
-          // Mostrar la lista de elementos
+        } else {
           return ListView(
             children: items,
           );
-        } else if (snapshot.hasError) {
-          return Container(
-            child: Text('Error al obtener los datos'),
-          );
-        } else {
-          return Container(
-            child: const CircularProgressIndicator(),
-          );
         }
-      },
-    );
+      } else if (snapshot.hasError) {
+        return const Text('Error al obtener los datos');
+      } else {
+        return const CircularProgressIndicator();
+      }
+    },
+  );
+
   }
 }
