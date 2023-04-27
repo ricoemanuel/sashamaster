@@ -54,6 +54,7 @@ class _homeState extends State<home> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
+                          var student=data[index];
                           Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/controllers/firebase.controller.dart';
 
 class CarreerForm extends StatefulWidget {
   const CarreerForm({Key? key}) : super(key: key);
@@ -10,9 +11,15 @@ class CarreerForm extends StatefulWidget {
 
 class _CarreerFormState extends State<CarreerForm> {
   final _formKey = GlobalKey<FormState>();
+  final _formKeySb = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final creditsController = TextEditingController();
-
+  late List<Map<String, dynamic>> subjects = [];
+  late String subjectName;
+  late String subjectPoints;
+  late String Name;
+  late String Points;
+  late String term;
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -44,7 +51,9 @@ class _CarreerFormState extends State<CarreerForm> {
                   }
                   return null;
                 },
-                onSaved: (value) {},
+                onSaved: (value) {
+                  Name = value!;
+                },
               ),
               const SizedBox(height: 16.0),
               TextFormField(
@@ -61,7 +70,40 @@ class _CarreerFormState extends State<CarreerForm> {
                   }
                   return null;
                 },
-                onSaved: (value) {},
+                onSaved: (value) {
+                  Points = value!;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: [
+                    const Text(
+                      'Materias',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    
+                    DataTable(
+                      columns: const [
+                        DataColumn(label: Text('Nombre')),
+                        DataColumn(label: Text('Créditos')),
+                        DataColumn(label: Text('Semestre')),
+                      ],
+                      rows: List<DataRow>.generate(
+                        subjects.length,
+                        (int index) => DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text(subjects[index]['name'])),
+                            DataCell(Text(subjects[index]['points'])),
+                            DataCell(Text(subjects[index]['term'])),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
@@ -69,68 +111,100 @@ class _CarreerFormState extends State<CarreerForm> {
                   showModalBottomSheet<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                          return Container(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Materia',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
+                      return Form(
+                        key: _formKeySb,
+                        child: Container(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Materia',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor ingrese el nombre de la materia';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {},
                                 ),
-                                SizedBox(height: 16.0),
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Créditos',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor ingrese el nombre de la materia';
+                                  }
+
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  subjectName = value!;
+                                },
+                              ),
+                              const SizedBox(height: 16.0),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Créditos',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor ingrese la cantidad de créditos';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {},
                                 ),
-                                SizedBox(height: 16.0),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _formKey.currentState!.save();
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor ingrese la cantidad de créditos';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  subjectPoints = value!;
+                                },
+                              ),
+                              const SizedBox(height: 16.0),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Semestre',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor ingrese el numero del semestre';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  term = value!;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKeySb.currentState!.validate()) {
+                                    _formKeySb.currentState!.save();
+                                    setState(() {
+                                      subjects.add({
+                                        'name': subjectName,
+                                        'points': subjectPoints,
+                                        'term': term
+                                      });
                                       Navigator.pop(context);
-                                    }
-                                  },
-                                  child: const Text('Agregar'),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.red,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0, horizontal: 6),
-                                    textStyle: const TextStyle(fontSize: 20.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
+                                    });
+                                  }
+                                },
+                                child: const Text('Agregar'),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16.0,
+                                    horizontal: 6,
+                                  ),
+                                  textStyle: const TextStyle(fontSize: 20.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
-                              ],
-                            ),
-                          );
-                        },
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   );
@@ -152,6 +226,12 @@ class _CarreerFormState extends State<CarreerForm> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+                    var carreer = {
+                      'name': Name,
+                      'points': Points,
+                      'subjects': subjects
+                    };
+                    CreateCarreer(carreer);
                   }
                 },
                 child: const Text('Registrar'),

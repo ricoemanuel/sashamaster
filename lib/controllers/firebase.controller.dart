@@ -5,6 +5,8 @@ import 'package:path/path.dart';
 import 'dart:io';
 import 'dart:core';
 
+import 'package:sashamaster/views/carreers.view.dart';
+
 FirebaseFirestore db = FirebaseFirestore.instance;
 final storageRef = FirebaseStorage.instance.ref();
 
@@ -108,6 +110,46 @@ Future<dynamic> EditUser(data) async {
     var user = data['uid'];
     data.remove("uid");
     return await db.collection("users").doc(user).set(data);
+  } on Exception catch (e) {
+    print(e);
+  }
+}
+
+// ignore: non_constant_identifier_names
+Future<dynamic> GetSubject(doc) async {
+  var subject = db.collection("users").doc(doc).get();
+  return subject;
+}
+
+// ignore: non_constant_identifier_names
+Future<dynamic> GetCarreer(name) async {
+  var carreer = db.collection("users").where("name", isEqualTo: name).get();
+  return carreer;
+}
+
+// ignore: non_constant_identifier_names
+Future<String?> CreateSubject(data) async {
+  try {
+    final docRef = await db.collection("subjects").add(data);
+    return docRef.id;
+  } on Exception catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+// ignore: non_constant_identifier_names
+Future<dynamic> CreateCarreer(data) async {
+  try {
+    var subjects = [];
+
+    for (var subject in data['subjects']) {
+      var term = subject['term'];
+      subject.remove('term');
+      subjects.add({'code': await CreateSubject(subject), 'term': term});
+    }
+    data['subjects'] = subjects;
+    return await db.collection("carreers").add(data);
   } on Exception catch (e) {
     print(e);
   }

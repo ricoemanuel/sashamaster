@@ -7,6 +7,7 @@ import 'package:sashamaster/views/NotAcceptedStudents.view.dart';
 import 'package:sashamaster/views/student.view.dart';
 import 'package:sashamaster/views/terms.view.dart';
 
+import 'MyProfile.view.dart';
 import 'carreers.view.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -20,8 +21,9 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
-  final List<Widget> _pages = [const home(), const term(), const carreers()];
+  final List<Widget> _pages = [const home(), const term(), const carreers(), const UserInfoView()];
   int selectedPage = 0;
+  bool validation = true;
   @override
   void initState() {
     super.initState();
@@ -36,6 +38,15 @@ class _StartPage extends State<StartPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             final data = snapshot.data!;
+            if (validation) {
+              if (data["charge"] == "estudiante") {
+                selectedPage = 1;
+              } else if (data["charge"] == "admin") {
+                selectedPage = 0;
+              }
+              validation = false;
+            }
+
             return Scaffold(
               body: _pages[selectedPage],
               key: _scaffoldKey,
@@ -85,13 +96,18 @@ class _StartPage extends State<StartPage> {
                         ? ListTile(
                             leading: const Icon(Icons.home),
                             title: const Text('Inicio'),
-                            selected: selectedPage == 0,
+                            selected: data["charge"] == 'admin'
+                                ? selectedPage == 0
+                                : selectedPage == 1,
                             onTap: () {
                               setState(() {
-                                selectedPage = 0;
+                                if (data["charge"] == "estudiante") {
+                                  selectedPage = 1;
+                                } else if (data["charge"] == "admin") {
+                                  selectedPage = 0;
+                                }
                                 Navigator.pop(context);
                               });
-                              
                             },
                           )
                         : Container(),
@@ -115,7 +131,6 @@ class _StartPage extends State<StartPage> {
                                 selectedPage = 2;
                                 Navigator.pop(context);
                               });
-                              
                             },
                           )
                         : Container(),
@@ -123,8 +138,12 @@ class _StartPage extends State<StartPage> {
                         ? ListTile(
                             leading: const Icon(Icons.supervised_user_circle),
                             title: const Text('Mi perfil'),
+                            selected: selectedPage == 3,
                             onTap: () {
-                              // Agrega aquí la lógica para navegar a la pantalla de configuración
+                              setState(() {
+                                selectedPage = 3;
+                                Navigator.pop(context);
+                              });
                             },
                           )
                         : Container(),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sashamaster/views/student.view.dart';
 
 import '../controllers/firebase.controller.dart';
+import 'carreer.view.dart';
 import 'formCarreer.view.dart';
 
 // ignore: camel_case_types
@@ -82,7 +83,7 @@ class _carreersState extends State<carreers> {
                                   appBar: AppBar(
                                     title: Text(data[index]['name']),
                                   ),
-                                  body: CardWidget(data: data, index: index)),
+                                  body: carreer(data: data, index: index)),
                             ),
                           );
                         },
