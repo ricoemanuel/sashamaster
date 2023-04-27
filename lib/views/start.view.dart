@@ -7,6 +7,8 @@ import 'package:sashamaster/views/NotAcceptedStudents.view.dart';
 import 'package:sashamaster/views/student.view.dart';
 import 'package:sashamaster/views/terms.view.dart';
 
+import 'carreers.view.dart';
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class StartPage extends StatefulWidget {
@@ -18,8 +20,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
-  final List<Widget> _pages = [const home(), const term()];
-  late int selectedPage;
+  final List<Widget> _pages = [const home(), const term(), const carreers()];
+  int selectedPage = 0;
   @override
   void initState() {
     super.initState();
@@ -34,13 +36,6 @@ class _StartPage extends State<StartPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             final data = snapshot.data!;
-
-            if (data["charge"] == "estudiante") {
-              selectedPage = 1;
-            } else if (data["charge"] == "admin") {
-              selectedPage = 0;
-            }
-
             return Scaffold(
               body: _pages[selectedPage],
               key: _scaffoldKey,
@@ -94,8 +89,9 @@ class _StartPage extends State<StartPage> {
                             onTap: () {
                               setState(() {
                                 selectedPage = 0;
+                                Navigator.pop(context);
                               });
-                              Navigator.pop(context);
+                              
                             },
                           )
                         : Container(),
@@ -106,6 +102,20 @@ class _StartPage extends State<StartPage> {
                             title: const Text('Estudiantes'),
                             onTap: () {
                               // Agrega aquí la lógica para navegar a la pantalla de inicio
+                            },
+                          )
+                        : Container(),
+                    data["charge"] == "admin"
+                        ? ListTile(
+                            leading: const Icon(Icons.book),
+                            selected: selectedPage == 2,
+                            title: const Text('Carreras'),
+                            onTap: () {
+                              setState(() {
+                                selectedPage = 2;
+                                Navigator.pop(context);
+                              });
+                              
                             },
                           )
                         : Container(),

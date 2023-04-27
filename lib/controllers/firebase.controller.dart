@@ -73,6 +73,10 @@ Stream<QuerySnapshot> getNotAcceptedUsers() {
   return db.collection("users").where("state", isEqualTo: "1").snapshots();
 }
 
+// ignore: non_constant_identifier_names
+Stream<QuerySnapshot> getCarreers() {
+  return db.collection("carreers").snapshots();
+}
 
 // ignore: non_constant_identifier_names
 Future<Map<String, dynamic>> CurrentUser() async {
