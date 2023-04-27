@@ -8,6 +8,7 @@ import 'package:sashamaster/views/student.view.dart';
 import 'package:sashamaster/views/terms.view.dart';
 
 import 'MyProfile.view.dart';
+import 'StudentsList.dart';
 import 'carreers.view.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -21,7 +22,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
-  final List<Widget> _pages = [const home(), const term(), const carreers(), const UserInfoView()];
+  final List<Widget> _pages = [const home(), const term(), const carreers(), const StudentsList(), const MyProfile()];
   int selectedPage = 0;
   bool validation = true;
   @override
@@ -116,8 +117,12 @@ class _StartPage extends State<StartPage> {
                             leading: const Icon(
                                 Icons.supervised_user_circle_rounded),
                             title: const Text('Estudiantes'),
+                            selected: selectedPage == 3,
                             onTap: () {
-                              // Agrega aquí la lógica para navegar a la pantalla de inicio
+                              setState(() {
+                                selectedPage = 3;
+                                Navigator.pop(context);
+                              });
                             },
                           )
                         : Container(),
@@ -138,10 +143,10 @@ class _StartPage extends State<StartPage> {
                         ? ListTile(
                             leading: const Icon(Icons.supervised_user_circle),
                             title: const Text('Mi perfil'),
-                            selected: selectedPage == 3,
+                            selected: selectedPage == 4,
                             onTap: () {
                               setState(() {
-                                selectedPage = 3;
+                                selectedPage = 4;
                                 Navigator.pop(context);
                               });
                             },

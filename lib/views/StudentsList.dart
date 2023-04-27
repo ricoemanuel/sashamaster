@@ -5,20 +5,20 @@ import 'package:sashamaster/views/student.view.dart';
 import '../controllers/firebase.controller.dart';
 
 // ignore: camel_case_types
-class home extends StatefulWidget {
-  const home({Key? key}) : super(key: key);
+class StudentsList extends StatefulWidget {
+  const StudentsList({Key? key}) : super(key: key);
 
   @override
-  _homeState createState() => _homeState();
+  _StudentsListState createState() => _StudentsListState();
 }
 
-class _homeState extends State<home> {
+class _StudentsListState extends State<StudentsList> {
   late Stream<QuerySnapshot> _stream;
 
   @override
   void initState() {
     super.initState();
-    _stream = getNotAcceptedUsers();
+    _stream = getstudents();
   }
 
   @override
@@ -34,7 +34,7 @@ class _homeState extends State<home> {
           return RefreshIndicator(
             onRefresh: () async {
               setState(() {
-                _stream = getNotAcceptedUsers();
+                _stream = getstudents();
               });
             },
             child: Column(
@@ -43,7 +43,7 @@ class _homeState extends State<home> {
                 const Padding(
                   padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
                   child: Text(
-                    'Usuarios sin aceptar',
+                    'Lista de Estudiantes',
                     style:
                     TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),

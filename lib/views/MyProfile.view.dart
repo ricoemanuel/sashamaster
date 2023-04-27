@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../controllers/firebase.controller.dart';
+import 'editUserForm.view.dart';
 
-class UserInfoView extends StatelessWidget {
-  const UserInfoView({Key? key}) : super(key: key);
+class MyProfile extends StatelessWidget {
+  const MyProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,47 +12,60 @@ class UserInfoView extends StatelessWidget {
       future: CurrentUser(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          final user = FirebaseAuth.instance.currentUser?.uid;
           final data = snapshot.data!;
+          data['uid'] = user;
+          var nombre = '${data['name']} ${data['lastname']}';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                        'https://picsum.photos/seed/picsum/1200/200'),
+                    image: NetworkImage('lib/images/campus.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
                 height: 200,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(
                   children: [
-                    const SizedBox(width: 16),
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(data['photo']),
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          '${data['name']} ${data['lastname']}',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        const SizedBox(width: 16),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(data['photo']),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          data['carreer'],
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
+                        const SizedBox(width: 16),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              nombre.length > 20
+                                  ? '${nombre.substring(0, 20)}...'
+                                  : nombre,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              data['carreer'],
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -97,7 +112,18 @@ class UserInfoView extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            // Agrega aquí la lógica para editar la información del usuario
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(data['name']),
+                                    ),
+                                    body: ProfileInformationEdition(
+                                      data: data,
+                                    ),
+                                  ),
+                                ));
                           },
                         ),
                       ),

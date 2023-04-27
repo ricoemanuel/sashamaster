@@ -74,7 +74,10 @@ Future<dynamic> GetUser(uid) async {
 Stream<QuerySnapshot> getNotAcceptedUsers() {
   return db.collection("users").where("state", isEqualTo: "1").snapshots();
 }
-
+// ignore: non_constant_identifier_names
+Stream<QuerySnapshot> getstudents() {
+  return db.collection("users").where("charge", isEqualTo: "estudiante").snapshots();
+}
 // ignore: non_constant_identifier_names
 Stream<QuerySnapshot> getCarreers() {
   return db.collection("carreers").snapshots();
