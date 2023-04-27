@@ -23,52 +23,151 @@ class _CarreerFormState extends State<CarreerForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'Nombre de la carrera:',
-            style: TextStyle(fontSize: 18.0),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 16.0),
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Carrera',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    )),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese la carrera';
+                  }
+                  return null;
+                },
+                onSaved: (value) {},
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Créditos',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese la cantidad de créditos';
+                  }
+                  return null;
+                },
+                onSaved: (value) {},
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton.icon(
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return Container(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Materia',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingrese el nombre de la materia';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {},
+                                ),
+                                SizedBox(height: 16.0),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Créditos',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingrese la cantidad de créditos';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {},
+                                ),
+                                SizedBox(height: 16.0),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: const Text('Agregar'),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0, horizontal: 6),
+                                    textStyle: const TextStyle(fontSize: 20.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.add),
+                label: Text('Agregar'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16.0, horizontal: 6),
+                  textStyle: const TextStyle(fontSize: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                  }
+                },
+                child: const Text('Registrar'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16.0, horizontal: 6),
+                  textStyle: const TextStyle(fontSize: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: nameController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor ingrese un nombre de carrera';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Créditos:',
-            style: TextStyle(fontSize: 18.0),
-          ),
-          TextFormField(
-            controller: creditsController,
-            decoration: InputDecoration(
-              labelText: 'Créditos',
-            ),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor ingrese los créditos requeridos';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Form is valid, so do something
-              }
-            },
-            child: const Text('Enviar'),
-          ),
-        ],
+        ),
       ),
     );
   }
