@@ -67,11 +67,12 @@ Future<dynamic> GetUser(uid) async {
   var user = db.collection("users").doc(uid).get();
   return user;
 }
+
 // ignore: non_constant_identifier_names
-Future<dynamic> GetNotAcceptedUser() async {
-  var user = db.collection("users").where("state",isEqualTo:"1").get();
-  return user;
+Stream<QuerySnapshot> getNotAcceptedUsers() {
+  return db.collection("users").where("state", isEqualTo: "1").snapshots();
 }
+
 
 // ignore: non_constant_identifier_names
 Future<Map<String, dynamic>> CurrentUser() async {
@@ -84,7 +85,9 @@ Future<String> uploadFile(File file) async {
   try {
     final fileName = basename(file.path);
     DateTime now = DateTime.now();
-    var time = DateTime(now.year, now.month, now.day, now.second,now.microsecond).toString();
+    var time =
+        DateTime(now.year, now.month, now.day, now.second, now.microsecond)
+            .toString();
     final destination = 'images/$fileName-$time';
     final ref = storageRef.child(destination);
     await ref.putFile(file);
@@ -92,5 +95,16 @@ Future<String> uploadFile(File file) async {
     return url;
   } catch (e) {
     return e.toString();
+  }
+}
+
+// ignore: non_constant_identifier_names
+Future<dynamic> EditUser(data) async {
+  try {
+    var user = data['uid'];
+    data.remove("uid");
+    return await db.collection("users").doc(user).set(data);
+  } on Exception catch (e) {
+    print(e);
   }
 }

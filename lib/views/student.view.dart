@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/controllers/firebase.controller.dart';
 
 class CardWidget extends StatelessWidget {
   final List<dynamic> data;
@@ -14,8 +15,8 @@ class CardWidget extends StatelessWidget {
         const SizedBox(height: 20),
         Center(
           child: Container(
-            height: 380,
-            width: 380,
+            height: 190,
+            width: 190,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(data[index]['photo']),
@@ -53,12 +54,15 @@ class CardWidget extends StatelessWidget {
           child: data[index]['state'] == "1"
               ? ElevatedButton(
                   onPressed: () {
-                    // Lógica del botón "Aceptar"
+                    data[index]['state'] = "2";
+                    final Map<String, dynamic> mapData =
+                        Map<String, dynamic>.from(data[index]);
+                    EditUser(mapData);
                   },
-                  child: Text('Aceptar', style: const TextStyle(fontSize: 18)),
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                    minimumSize: MaterialStateProperty.all(const Size(200, 50)),
                   ),
+                  child: const Text('Aceptar', style: TextStyle(fontSize: 18)),
                 )
               : const SizedBox(),
         ),
