@@ -129,7 +129,16 @@ Future<dynamic> GetCarreer(name) async {
   var carreer = db.collection("users").where("name", isEqualTo: name).get();
   return carreer;
 }
-
+// ignore: non_constant_identifier_names
+Future<dynamic> GetCarreerByDoc(id) async {
+  var carreer = db.collection("carreers").doc(id).get();
+  return carreer;
+}
+// ignore: non_constant_identifier_names
+Future<dynamic> GetSubjectByID(id) async {
+  var subject = db.collection("subjects").doc(id).get();
+  return subject;
+}
 // ignore: non_constant_identifier_names
 Future<String?> CreateSubject(data) async {
   try {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/views/termDetail.view.dart';
 
 import '../controllers/firebase.controller.dart';
 
@@ -33,16 +34,7 @@ class _termState extends State<term> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text(
-                            'Contenido del Semestre ${selectedSemesterIndex + 1}'),
-                      ),
-                      body: Center(
-                        child: Text(
-                            'Contenido del Semestre ${selectedSemesterIndex + 1}'),
-                      ),
-                    ),
+                    builder: (context) => termDetail(selectedSemesterIndex,data),
                   ),
                 );
               },
