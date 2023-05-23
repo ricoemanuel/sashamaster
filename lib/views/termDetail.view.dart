@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/views/subject-student.view.dart';
+import 'package:sashamaster/views/subject.view.dart';
 
 import '../controllers/firebase.controller.dart';
 
@@ -50,10 +52,20 @@ class termDetail extends StatelessWidget {
                           child: Text('Error: ${subjectSnapshot.error}'));
                     } else {
                       final subjectData = subjectSnapshot.data!;
+                      final id=subjectSnapshot.data.id;
                       final subjectName = subjectData["name"];
 
                       return ListTile(
                         title: Text(subjectName),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SubjectDetailsStudentPage(subjectData, data, id),
+                            ),
+                          );
+                        },
                       );
                     }
                   },

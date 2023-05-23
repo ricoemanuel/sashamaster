@@ -156,6 +156,32 @@ Future<dynamic> GetGrades(subject, student) async {
   
   return grades;
 }
+// ignore: non_constant_identifier_names
+Stream<QuerySnapshot> GetGradesStream(subject, student) {
+  return db
+      .collection("grades")
+      .where("subject", isEqualTo: subject)
+      .where("student", isEqualTo: student)
+      .snapshots();
+}
+
+
+// ignore: non_constant_identifier_names
+Future<dynamic> SetGrade(data,doc) async {
+  try {
+    return await db.collection("grades").doc(doc).set(data);
+  } on Exception catch (e) {
+    print(e);
+  }
+}
+// ignore: non_constant_identifier_names
+Future<dynamic> CreateGrade(data) async {
+  try {
+    return await db.collection("grades").add(data);
+  } on Exception catch (e) {
+    print(e);
+  }
+}
 
 // ignore: non_constant_identifier_names
 Future<String?> CreateSubject(data) async {

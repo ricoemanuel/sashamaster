@@ -6,6 +6,7 @@ class SubjectDetailsPage extends StatelessWidget {
   final dynamic data;
   final dynamic student;
   final String id;
+
   const SubjectDetailsPage(this.data, this.student, this.id, {Key? key})
       : super(key: key);
 
@@ -18,8 +19,8 @@ class SubjectDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(subjectName),
       ),
-      body: FutureBuilder<dynamic>(
-        future: GetGrades(id, studentUid),
+      body: StreamBuilder<dynamic>(
+        stream: GetGradesStream(id, studentUid),
         builder: (BuildContext context, AsyncSnapshot<dynamic> gradesSnapshot) {
           if (gradesSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -28,8 +29,7 @@ class SubjectDetailsPage extends StatelessWidget {
           } else {
             final docs =
                 gradesSnapshot.data!.docs.map((doc) => doc.data()).toList();
-            final gradesList = docs[0]["grades"];
-
+            List<dynamic> gradesList = docs.length < 1 ? [] : docs[0]["grades"];
             return Column(
               children: [
                 IconButton(
@@ -42,7 +42,7 @@ class SubjectDetailsPage extends StatelessWidget {
                             idMateria: id,
                             idEstudiante: studentUid,
                             gradeData: {},
-                            index: 0);
+                            index: -1);
                       },
                     );
                   },
@@ -79,6 +79,7 @@ class SubjectDetailsPage extends StatelessWidget {
                                       showModalBottomSheet(
                                         context: context,
                                         builder: (BuildContext context) {
+                                          print(index);
                                           return FormularioWidget(
                                               idMateria: id,
                                               idEstudiante: studentUid,
@@ -106,47 +107,33 @@ class SubjectDetailsPage extends StatelessWidget {
   }
 }
 
-class FormularioWidget extends StatefulWidget {
+class FormularioWidget extends StatelessWidget {
   final String idMateria;
   final String idEstudiante;
   final dynamic gradeData;
   final int index;
-  const FormularioWidget(
-      {Key? key,
-      required this.idMateria,
-      required this.idEstudiante,
-      this.gradeData,
-      required this.index})
-      : super(key: key);
 
-  @override
-  _FormularioWidgetState createState() => _FormularioWidgetState();
-}
-
-class _FormularioWidgetState extends State<FormularioWidget> {
-  final TextEditingController _actividadController = TextEditingController();
-  final TextEditingController _notaController = TextEditingController();
-  final TextEditingController _porcentajeController = TextEditingController();
-
-  get idMateria => null;
-
-  get idEstudiante => null;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Verificar si se proporcionó el atributo gradeData y establecer los valores en los controladores de texto
-    if (widget.gradeData != null) {
-      _actividadController.text = widget.gradeData['activity'] ?? '';
-      _notaController.text = widget.gradeData['grade']?.toString() ?? '';
-      _porcentajeController.text =
-          widget.gradeData['porcentaje']?.toString() ?? '';
-    }
-  }
+  const FormularioWidget({
+    Key? key,
+    required this.idMateria,
+    required this.idEstudiante,
+    this.gradeData,
+    required this.index,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _actividadController = TextEditingController();
+    final TextEditingController _notaController = TextEditingController();
+    final TextEditingController _porcentajeController = TextEditingController();
+
+    // Verificar si se proporcionó el atributo gradeData y establecer los valores en los controladores de texto
+    if (gradeData != null) {
+      _actividadController.text = gradeData['activity'] ?? '';
+      _notaController.text = gradeData['grade']?.toString() ?? '';
+      _porcentajeController.text = gradeData['porcentaje']?.toString() ?? '';
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -176,14 +163,50 @@ class _FormularioWidgetState extends State<FormularioWidget> {
           ElevatedButton(
             onPressed: () async {
               // Acción para guardar los datos del formulario
-              String actividad = _actividadController.text;
-              String nota = _notaController.text;
+              String activity = _actividadController.text;
+              String grade = _notaController.text;
               String porcentaje = _porcentajeController.text;
               dynamic notas = await GetGrades(idMateria, idEstudiante);
-              notas.docs.forEach((doc) {
-                print(doc.data());
-              });
+              if (index < 0) {
+                if (notas.size > 0) {
+                  notas.docs.forEach((doc) {
+                    var nota = doc.data();
+                    List<dynamic> gradesList = List.from(nota["grades"]);
+                    gradesList.add({
+                      'activity': activity,
+                      'grade': grade,
+                      'porcentaje': porcentaje,
+                    });
+                    nota["grades"] = gradesList;
+                    SetGrade(nota, doc.id);
+                  });
+                } else {
+                  Map<String, dynamic> nota = {
+                    'subject': idMateria,
+                    'student': idEstudiante,
+                    'grades': [],
+                  };
+                  List<dynamic> gradesList = List.from(nota["grades"]);
+                    gradesList.add({
+                      'activity': activity,
+                      'grade': grade,
+                      'porcentaje': porcentaje,
+                    });
+                    nota["grades"] = gradesList;
+                  
+                  CreateGrade(nota);
+                }
+              } else {
+                notas.docs.forEach((doc) {
+                  var nota = doc.data();
+                  nota["grades"][index]["activity"] = activity;
+                  nota["grades"][index]["grade"] = grade;
+                  nota["grades"][index]["porcentaje"] = porcentaje;
+                  SetGrade(nota, doc.id);
+                });
+              }
 
+              // ignore: use_build_context_synchronously
               Navigator.pop(context); // Cierra el showModalBottomSheet
             },
             child: const Text('Guardar'),
