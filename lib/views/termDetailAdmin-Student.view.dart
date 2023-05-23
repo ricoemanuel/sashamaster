@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sashamaster/views/subject.view.dart';
 
 import '../controllers/firebase.controller.dart';
 
 // ignore: camel_case_types
-class termDetail extends StatelessWidget {
+class termDetailAdminStudent extends StatelessWidget {
   final int selectedSemesterIndex;
 
   final dynamic data;
-  
-  const termDetail(this.selectedSemesterIndex, this.data, {super.key});
+
+  const termDetailAdminStudent(this.selectedSemesterIndex, this.data,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +26,18 @@ class termDetail extends StatelessWidget {
           final List<dynamic> subjects = carreer["subjects"];
           final List<String> codes = [];
           for (var i = 0; i < subjects.length; i++) {
-            if (subjects[i]["term"] == (selectedSemesterIndex + 1).toString()) {
+            if (subjects[i]["term"] == (selectedSemesterIndex).toString()) {
               codes.add(subjects[i]["code"]);
             }
           }
           return Scaffold(
             appBar: AppBar(
-              title:
-                  Text('Contenido del Semestre ${selectedSemesterIndex + 1}'),
+              title: Text('Materias del Semestre $selectedSemesterIndex'),
             ),
-            body: ListView.builder(
+            body: ListView.separated(
               itemCount: codes.length,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
               itemBuilder: (BuildContext context, int index) {
                 final subjectId = codes[index];
 
@@ -50,10 +53,20 @@ class termDetail extends StatelessWidget {
                           child: Text('Error: ${subjectSnapshot.error}'));
                     } else {
                       final subjectData = subjectSnapshot.data!;
+                      final id=subjectSnapshot.data.id;
                       final subjectName = subjectData["name"];
-
+                      
                       return ListTile(
                         title: Text(subjectName),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SubjectDetailsPage(subjectData, data, id),
+                            ),
+                          );
+                        },
                       );
                     }
                   },

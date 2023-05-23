@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'dart:core';
-
 import 'package:sashamaster/views/carreers.view.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -74,10 +73,15 @@ Future<dynamic> GetUser(uid) async {
 Stream<QuerySnapshot> getNotAcceptedUsers() {
   return db.collection("users").where("state", isEqualTo: "1").snapshots();
 }
+
 // ignore: non_constant_identifier_names
 Stream<QuerySnapshot> getstudents() {
-  return db.collection("users").where("charge", isEqualTo: "estudiante").snapshots();
+  return db
+      .collection("users")
+      .where("charge", isEqualTo: "estudiante")
+      .snapshots();
 }
+
 // ignore: non_constant_identifier_names
 Stream<QuerySnapshot> getCarreers() {
   return db.collection("carreers").snapshots();
@@ -129,16 +133,30 @@ Future<dynamic> GetCarreer(name) async {
   var carreer = db.collection("users").where("name", isEqualTo: name).get();
   return carreer;
 }
+
 // ignore: non_constant_identifier_names
 Future<dynamic> GetCarreerByDoc(id) async {
   var carreer = db.collection("carreers").doc(id).get();
   return carreer;
 }
+
 // ignore: non_constant_identifier_names
 Future<dynamic> GetSubjectByID(id) async {
   var subject = db.collection("subjects").doc(id).get();
   return subject;
 }
+
+// ignore: non_constant_identifier_names
+Future<dynamic> GetGrades(subject, student) async {
+  var grades = db
+      .collection("grades")
+      .where("subject", isEqualTo: subject)
+      .where("student", isEqualTo: student)
+      .get();
+  
+  return grades;
+}
+
 // ignore: non_constant_identifier_names
 Future<String?> CreateSubject(data) async {
   try {
