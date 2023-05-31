@@ -88,6 +88,13 @@ class _carreersState extends State<carreers> {
                           );
                         },
                         child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // Borde circular
+                            side: BorderSide(
+                                color: Color.fromARGB(255, 200, 189, 189)!,
+                                width: 1), // Borde más oscuro
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
@@ -98,11 +105,15 @@ class _carreersState extends State<carreers> {
                                   children: [
                                     Text(
                                       data[index]['name'],
-                                      style: const TextStyle(fontSize: 16),
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight
+                                              .bold), // Texto más grande y en negrita
                                     ),
                                     Text(
                                       data[index]['points'],
-                                      style: const TextStyle(fontSize: 12),
+                                      style: const TextStyle(
+                                          fontSize: 14), // Texto más grande
                                     ),
                                   ],
                                 ),
