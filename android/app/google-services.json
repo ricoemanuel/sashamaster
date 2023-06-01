@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "58715525124",
+    "project_id": "masterbysasha",
+    "storage_bucket": "masterbysasha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58715525124:android:4b2af8eeed3db175a8e551",
+        "android_client_info": {
+          "package_name": "com.example.sashamaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58715525124-nilbekih7ou5d6d7avle2pjp74r57f8l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sashamaster",
+            "certificate_hash": "7b1d9d051100dc1271240a0ca78b9178ee2e8696"
+          }
+        },
+        {
+          "client_id": "58715525124-89pus5lepflvjk6e0ck7uop54qn3ql7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOqNiiaFetMQ0ZSpzOisdqinRGqahc63c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58715525124-3p1r7bnl8oge5t0qf2uorkb3dd31a9d3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "58715525124-c7jrl5tm2bk92dd4hq7fbsn09pb5vr38.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sashamaster"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

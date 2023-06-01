@@ -3,17 +3,14 @@ import 'package:sashamaster/views/termDetail.view.dart';
 
 import '../controllers/firebase.controller.dart';
 
-// ignore: camel_case_types
-class term extends StatefulWidget {
-  const term({Key? key}) : super(key: key);
+class Term extends StatefulWidget {
+  const Term({Key? key}) : super(key: key);
 
   @override
-  State<term> createState() => _termState();
+  State<Term> createState() => _TermState();
 }
 
-// ignore: camel_case_types
-class _termState extends State<term> {
-  // Definir una variable para el índice del semestre seleccionado
+class _TermState extends State<Term> {
   int selectedSemesterIndex = -1;
 
   @override
@@ -24,6 +21,23 @@ class _termState extends State<term> {
         if (snapshot.hasData) {
           final data = snapshot.data!;
           final terms = data["term"];
+
+          if (data['state'] == '1') {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'No estás aceptado',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            );
+          }
+
           final List<Widget> rows = List.generate(
             (terms / 2).ceil(),
             (rowIndex) {

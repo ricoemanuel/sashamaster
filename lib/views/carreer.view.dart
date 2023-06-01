@@ -41,6 +41,7 @@ class carreer extends StatelessWidget {
                 itemCount: data[index]['subjects'].length,
                 itemBuilder: (context, i) {
                   final subject = data[index]['subjects'][i]['code'];
+                  final term = data[index]['subjects'][i]['term'];
                   return FutureBuilder(
                     future: db.collection('subjects').doc(subject).get(),
                     builder: (context, snapshot) {
@@ -66,9 +67,9 @@ class carreer extends StatelessWidget {
                                 const SizedBox(
                                     height:
                                         8), // Espaciado adicional de 8 puntos
-                                const Text(
-                                  'Semestre: ***',
-                                  style: TextStyle(fontSize: 14),
+                                Text(
+                                  'Semestre: $term',
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),

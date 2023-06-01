@@ -22,7 +22,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
-  final List<Widget> _pages = [const home(), const term(), const carreers(), const StudentsList(), const MyProfile()];
+  final List<Widget> _pages = [const home(), const Term(), const carreers(), const StudentsList(), const MyProfile()];
   int selectedPage = 0;
   bool validation = true;
   @override
@@ -72,8 +72,8 @@ class _StartPage extends State<StartPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(data['photo']),
+                          const CircleAvatar(
+                            backgroundImage: NetworkImage('lib/images/perfil.png'),
                             radius: 40,
                           ),
                           const SizedBox(height: 8),

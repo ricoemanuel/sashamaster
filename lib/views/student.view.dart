@@ -10,6 +10,7 @@ class UserInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var nombre = '${data['name']} ${data['lastname']}';
     return Scaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -17,46 +18,51 @@ class UserInfoView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://picsum.photos/seed/picsum/1200/200'),
-                  fit: BoxFit.cover,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage('lib/images/campus.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                height: 200,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 16),
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage('lib/images/perfil.png'),
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              nombre.length > 16
+                                  ? '${nombre.substring(0, 16)}...'
+                                  : nombre,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              height: 200,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 16),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(data['photo']),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          '${data['name']} ${data['lastname']}'.length > 16
-                              ? '${'${data['name']} ${data['lastname']}'.substring(0, 16)}...'
-                              : '${data['name']} ${data['lastname']}',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(16),
@@ -111,7 +117,28 @@ class UserInfoView extends StatelessWidget {
                       },
                     ),
                   ),
+                  Positioned(
+                    top: 0,
+                    right: 50,
+                    child: IconButton(
+                      icon: const Icon(Icons.check_circle),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: Text(data['name']),
+                              ),
+                              body: ProfileInformationEdition(data: data),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
+                
               ),
             ),
             Container(
@@ -127,21 +154,23 @@ class UserInfoView extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Semestres',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  for (int i = 0; i < data['term']; i++)
-                    _buildTermItem(context,'Semestre ', '${i + 1}'),
-                ],
-              ),
+              child: data["state"] != "1"
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Semestres',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        for (int i = 0; i < data['term']; i++)
+                          _buildTermItem(context, 'Semestre ', '${i + 1}'),
+                      ],
+                    )
+                  : Container(),
             )
           ],
         ),
@@ -213,38 +242,38 @@ class UserInfoView extends StatelessWidget {
   }
 
   Widget _buildTermItem(BuildContext context, String label, String value) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => termDetailAdminStudent(int.parse(value),data),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                termDetailAdminStudent(int.parse(value), data),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
         ),
-      );
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-        ],
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

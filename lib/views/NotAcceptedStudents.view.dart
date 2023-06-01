@@ -71,10 +71,10 @@ class _homeState extends State<home> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                  NetworkImage(data[index]['photo']),
+                                const CircleAvatar(
                                   radius: 30,
+                                  backgroundImage:
+                                      NetworkImage('lib/images/perfil.png'),
                                 ),
                                 const SizedBox(width: 8),
                                 Column(

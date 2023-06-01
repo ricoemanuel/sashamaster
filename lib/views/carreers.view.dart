@@ -92,7 +92,7 @@ class _carreersState extends State<carreers> {
                             borderRadius:
                                 BorderRadius.circular(10), // Borde circular
                             side: BorderSide(
-                                color: Color.fromARGB(255, 200, 189, 189)!,
+                                color: const Color.fromARGB(255, 200, 189, 189)!,
                                 width: 1), // Borde más oscuro
                           ),
                           child: Padding(

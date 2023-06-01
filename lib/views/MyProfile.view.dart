@@ -38,9 +38,9 @@ class MyProfile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(width: 16),
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(data['photo']),
+                          backgroundImage: NetworkImage('lib/images/perfil.png'),
                         ),
                         const SizedBox(width: 16),
                         Column(
@@ -58,13 +58,6 @@ class MyProfile extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            Text(
-                              data['carreer'],
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
                           ],
                         ),
                       ],
@@ -141,27 +134,72 @@ class MyProfile extends StatelessWidget {
   }
 
   Widget _buildInfoItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+    if (label == 'Estado') {
+      if (value == '1') {
+        value = 'No aceptado';
+      } else if (value == '2') {
+        value = 'Aceptado';
+      }
+    }
+    if (label == "Carrera" && value!="n/a") {
+      return FutureBuilder<dynamic>(
+        future: GetCarreerByDoc(value),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final dynamic carreer = snapshot.data!.data();
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: Text(
+                      label,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      carreer != null ? carreer['name'] : '',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 16),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }

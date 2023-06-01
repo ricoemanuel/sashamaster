@@ -81,6 +81,14 @@ Stream<QuerySnapshot> getstudents() {
       .where("charge", isEqualTo: "estudiante")
       .snapshots();
 }
+// ignore: non_constant_identifier_names
+Stream<QuerySnapshot> getstudentsAccepted() {
+  return db
+      .collection("users")
+      .where("charge", isEqualTo: "estudiante")
+      .where("state", isEqualTo: "2")
+      .snapshots();
+}
 
 // ignore: non_constant_identifier_names
 Stream<QuerySnapshot> getCarreers() {

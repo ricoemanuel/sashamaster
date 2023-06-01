@@ -164,55 +164,132 @@ class FormularioWidget extends StatelessWidget {
             onPressed: () async {
               // Acción para guardar los datos del formulario
               String activity = _actividadController.text;
-              String grade = _notaController.text;
-              String porcentaje = _porcentajeController.text;
-              dynamic notas = await GetGrades(idMateria, idEstudiante);
-              if (index < 0) {
-                if (notas.size > 0) {
-                  notas.docs.forEach((doc) {
-                    var nota = doc.data();
-                    List<dynamic> gradesList = List.from(nota["grades"]);
-                    gradesList.add({
-                      'activity': activity,
-                      'grade': grade,
-                      'porcentaje': porcentaje,
-                    });
-                    nota["grades"] = gradesList;
-                    SetGrade(nota, doc.id);
-                  });
-                } else {
-                  Map<String, dynamic> nota = {
-                    'subject': idMateria,
-                    'student': idEstudiante,
-                    'grades': [],
-                  };
-                  List<dynamic> gradesList = List.from(nota["grades"]);
-                    gradesList.add({
-                      'activity': activity,
-                      'grade': grade,
-                      'porcentaje': porcentaje,
-                    });
-                    nota["grades"] = gradesList;
-                  
-                  CreateGrade(nota);
-                }
-              } else {
-                notas.docs.forEach((doc) {
-                  var nota = doc.data();
-                  nota["grades"][index]["activity"] = activity;
-                  nota["grades"][index]["grade"] = grade;
-                  nota["grades"][index]["porcentaje"] = porcentaje;
-                  SetGrade(nota, doc.id);
-                });
-              }
+              String gradeString = _notaController.text;
+              String porcentajeString = _porcentajeController.text;
+              double porcentaje = double.parse(porcentajeString);
+              double grade = double.parse(gradeString);
+              dynamic auxContext = context;
+              dynamic bandera = false;
+              if (grade >= 0 && grade <= 5) {
+                if (porcentaje > 0 && porcentaje <= 1) {
+                  dynamic notas = await GetGrades(idMateria, idEstudiante);
+                  if (index < 0) {
+                    if (notas.size > 0) {
+                      notas.docs.forEach((doc) {
+                        var nota = doc.data();
+                        List<dynamic> gradesList = List.from(nota["grades"]);
+                        double ponderado = 0;
+                        gradesList.forEach((element) {
+                          ponderado += element['porcentaje'];
+                        });
+                        ponderado += porcentaje;
+                        if (ponderado <= 1) {
+                          gradesList.add({
+                            'activity': activity,
+                            'grade': grade,
+                            'porcentaje': porcentaje,
+                          });
+                          nota["grades"] = gradesList;
+                          SetGrade(nota, doc.id);
+                        } else {
+                          bandera = true;
+                        }
+                      });
+                    } else {
+                      Map<String, dynamic> nota = {
+                        'subject': idMateria,
+                        'student': idEstudiante,
+                        'grades': [],
+                      };
+                      List<dynamic> gradesList = List.from(nota["grades"]);
+                      gradesList.add({
+                        'activity': activity,
+                        'grade': grade,
+                        'porcentaje': porcentaje,
+                      });
+                      nota["grades"] = gradesList;
 
-              // ignore: use_build_context_synchronously
-              Navigator.pop(context); // Cierra el showModalBottomSheet
+                      CreateGrade(nota);
+                    }
+                  } else {
+                    notas.docs.forEach((doc) {
+                      var nota = doc.data();
+                      List<dynamic> gradesList = List.from(nota["grades"]);
+                      double ponderado = 0;
+                      gradesList.forEach((element) {
+                        ponderado += element['porcentaje'];
+                      });
+                      ponderado += porcentaje;
+                      ponderado -= nota["grades"][index]["porcentaje"];
+                      if (ponderado > 1) {
+                        bandera = true;
+                      } else {
+                        nota["grades"][index]["activity"] = activity;
+                        nota["grades"][index]["grade"] = grade;
+                        nota["grades"][index]["porcentaje"] = porcentaje;
+                        SetGrade(nota, doc.id);
+                      }
+                    });
+                  }
+                  if (!bandera) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context); // Cierra el showModalBottomSheet
+                  } else {
+                    showDialog(
+                      context: auxContext,
+                      builder: (BuildContext auxContext) {
+                        return const RangoInvalidoDialog(
+                            texto: 'La suma de los porcentajes sobrepasa 1');
+                      },
+                    );
+                  }
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return RangoInvalidoDialog(
+                          texto:
+                              'El número $porcentaje está fuera del rango válido (0-1).');
+                    },
+                  );
+                }
+              }else{
+                showDialog(
+                      context: auxContext,
+                      builder: (BuildContext auxContext) {
+                        return const RangoInvalidoDialog(
+                            texto: 'La nota no puede ser mayor a 5 ni menor a 0');
+                      },
+                    );
+              }
             },
             child: const Text('Guardar'),
           ),
         ],
       ),
+    );
+  }
+}
+
+class RangoInvalidoDialog extends StatelessWidget {
+  final String texto;
+
+  const RangoInvalidoDialog({super.key, required this.texto});
+
+  @override
+  Widget build(BuildContext context) {
+    print(true);
+    return AlertDialog(
+      title: const Text('Advertencia'),
+      content: Text(texto),
+      actions: <Widget>[
+        ElevatedButton(
+          child: const Text('Aceptar'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 }

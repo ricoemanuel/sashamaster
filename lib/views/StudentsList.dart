@@ -18,7 +18,7 @@ class _StudentsListState extends State<StudentsList> {
   @override
   void initState() {
     super.initState();
-    _stream = getstudents();
+    _stream = getstudentsAccepted();
   }
 
   @override
@@ -29,7 +29,7 @@ class _StudentsListState extends State<StudentsList> {
         if (snapshot.hasData) {
           final data = snapshot.data!.docs
               .map<Map<String, dynamic>>((doc) =>
-              {'uid': doc.id, ...doc.data() as Map<dynamic, dynamic>})
+                  {'uid': doc.id, ...doc.data() as Map<dynamic, dynamic>})
               .toList();
           return RefreshIndicator(
             onRefresh: () async {
@@ -44,8 +44,7 @@ class _StudentsListState extends State<StudentsList> {
                   padding: EdgeInsets.only(left: 16, top: 16, bottom: 8),
                   child: Text(
                     'Lista de Estudiantes',
-                    style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Expanded(
@@ -54,7 +53,7 @@ class _StudentsListState extends State<StudentsList> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          var student=data[index];
+                          var student = data[index];
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -71,10 +70,10 @@ class _StudentsListState extends State<StudentsList> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                  NetworkImage(data[index]['photo']),
+                                const CircleAvatar(
                                   radius: 30,
+                                  backgroundImage:
+                                      NetworkImage('lib/images/perfil.png'),
                                 ),
                                 const SizedBox(width: 8),
                                 Column(
@@ -114,4 +113,3 @@ class _StudentsListState extends State<StudentsList> {
     );
   }
 }
-
